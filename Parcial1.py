@@ -86,6 +86,7 @@ class app(Tk):
                 self.integral = integrate(self.expresion_integrar, (self.diferencialDeCarga, 0, (self.q/2) ))
 
                 print("integral: ", self.integral )
+                self.l3.config(text="Integral de Anillo")
                 self.l5.config(text=self.integral)
 
                 #reemplazar las variables y calcular el valor
@@ -117,7 +118,7 @@ class app(Tk):
             self.radio = float (self.e1.get())
             self.x = float(self.e2.get()) #distancia
             self.Carga = float(self.e3.get())
-            if self.radio>0 and self.x>0:
+            if True:#self.radio>0 and self.x>0:
                 
                 #variables a usar
                 self.constanteK= 9*10**9
@@ -140,24 +141,25 @@ class app(Tk):
                 self.DiferencialDeCampo= diff(self.Campo, self.Carga)* self.diferencialDeCarga #dE= K/r^2 *dq
                 print("dE:",self.DiferencialDeCampo)
 
-
                 #reemplazar dq por (σ*2*pi*r dr)
                 self.r_expresion= self.sigma * 2 * pi* self.r * self.diferencialDeRadio
                 self.DiferencialDeCampo = self.DiferencialDeCampo.subs(self.diferencialDeCarga,self.r_expresion )
                 print("expresion: ",self.DiferencialDeCampo )
                 
                 #integrar la expresion
-                
-                #self.expresion_integrar = self.DiferencialDeCampo.subs(self.diferencialDeRadio,1) # 1 por la diferencial 
-                self.integral = integrate(self.DiferencialDeCampo, (self.diferencialDeRadio, 0, (self.R) ))
-
+                self.expresion_integrar = self.DiferencialDeCampo.subs(self.diferencialDeRadio, 1) # para integrar en sympy no se necesita del diferencial, solo se utiliza para la notación 
+                self.integral = integrate(self.expresion_integrar, self.r)
+                self.integralValuada = integrate(self.expresion_integrar, (self.r, 0, self.R))
                 print("integral: ", self.integral )
+                print("integral: ", self.integralValuada )
+                self.l3.config(text="Integral de Disco")
                 self.l5.config(text=self.integral)
 
                 #reemplazar las variables y calcular el valor
-                self.resultadoAnillo= self.integral.subs({self.radio: float (self.e1.get()), self.q: float(self.e3.get()), self.x : float(self.e2.get()), self.constanteK: 9*10**9 })
-                print("resultado: ", self.resultadoAnillo )
-                self.l7.config(text=self.resultadoAnillo)
+                #self.integralValuada = integralValuada.subs()
+                self.resultadoDisco= self.integral.subs({ self.x : float(self.e2.get()), self.constanteK: 9*10**9, self.sigma : float(self.e3.get()/(2*float(self.e1.get()),))})
+                print("resultado: ", self.resultadoDisco )
+                #self.l7.config(text=self.resultadoAnillo)
 
             
 
@@ -165,12 +167,9 @@ class app(Tk):
                 messagebox.showerror("error", "asegurese de ingresar un número validoy todos los valores") 
 
         except Exception as msg: 
-            messagebox.showerror("error", "asegurese de ingresar un número validoy todos los valores")
+            messagebox.showerror("error", "asegurese de ingresar un número valido todos los valores")
 
 
-
-        
-   
 
     def LineaDeCarga(self):
         pass
