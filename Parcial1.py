@@ -114,11 +114,11 @@ class app(Tk):
         r= sqrt(a^2+x^2)
         dq = σdA
         """
-        try: 
-            self.radio = float (self.e1.get())
-            self.x = float(self.e2.get()) #distancia
-            self.Carga = float(self.e3.get())
-            if True:#self.radio>0 and self.x>0:
+        
+        self.radio = float (self.e1.get())
+        self.x = float(self.e2.get()) #distancia
+        self.Carga = float(self.e3.get())
+        if True:#self.radio>0 and self.x>0:
                 
                 #variables a usar
                 self.constanteK= 9*10**9
@@ -152,23 +152,21 @@ class app(Tk):
                 self.integralValuada = integrate(self.expresion_integrar, (self.r, 0, self.R))
                 print("integral: ", self.integral )
                 print("integral: ", self.integralValuada )
-                self.l3.config(text="Integral de Disco")
+                self.l4.config(text="Integral de Disco")
                 self.l5.config(text=self.integral)
 
                 #reemplazar las variables y calcular el valor
-                #self.integralValuada = integralValuada.subs()
-                self.resultadoDisco= self.integral.subs({ self.x : float(self.e2.get()), self.constanteK: 9*10**9, self.sigma : float(self.e3.get()/(2*float(self.e1.get()),))})
+                self.valorSigma =  float(self.e3.get())/(pi*float(self.e1.get())**2)
+                self.resultadoDisco= self.integral.subs({ self.x : float(self.e2.get()), self.constanteK: 9*10**9, self.sigma: self.valorSigma, self.r: self.e1.get()})
                 print("resultado: ", self.resultadoDisco )
                 #self.l7.config(text=self.resultadoAnillo)
 
             
 
-            else:
-                messagebox.showerror("error", "asegurese de ingresar un número validoy todos los valores") 
+        else:
+            messagebox.showerror("error", "asegurese de ingresar un número validoy todos los valores") 
 
-        except Exception as msg: 
-            messagebox.showerror("error", "asegurese de ingresar un número valido todos los valores")
-
+       
 
 
     def LineaDeCarga(self):
