@@ -8,7 +8,7 @@
 from tkinter import * 
 from tkinter import messagebox
 from math import sin, cos, tan 
-from sympy import *  #libreria para las integrales
+from sympy import *  #libreria para las derivadas e integrales
 
 class app(Tk):
     def __init__(self):
@@ -42,34 +42,53 @@ class app(Tk):
         r= sqrt(a^2+x^2)
         """
    
-        #try: 
-        self.radio = float (self.e1.get())
+        try: 
+            self.radio = float (self.e1.get())
+            #self.x = float(self.e2.get()) #distancia
+            if self.radio>0:
+                #variables a usar
+                self.constanteK= 9*10**9
+                #campo = E, dE= DiferencialDeCampo, dq= DiferencialDeCarga, a= radio, r= distancia de diferencial de carga al punto, x= distancia
+                #self.Campo, self.DiferencialDeCampo, self.DiferencialDeCarga, self.r, self.x, self.a, self.Carga
+                self.x=-1
+                self.r= sqrt(self.radio ** 2 + self.x ** 2)
+                #deduccion
+                #derivada del campo dE
+                #para que use variables, no los numeros
+                self.Carga= symbols('Carga')
+                self.diferencialDeCarga= symbols('dq') #diferencial de carga
+                self.constanteK, self.r , self.x, self.radio = symbols('constanteK r x a', positive=True, real=True) 
+                
+                #calculo de dE
+                self.Campo= self.constanteK * (self.Carga/pow(self.r,2))
+                self.DiferencialDeCampo= diff(self.Campo, self.Carga)* self.diferencialDeCarga #dE= K/r^2 *dq
+                print("dE:",self.DiferencialDeCampo)
 
-        if self.radio>0:
-            #variables a usar
-            self.constanteK= 9*10**9
-            #campo = E, dE= DiferencialDeCampo, dq= DiferencialDeCarga, a= radio, r= distancia de diferencial de carga al punto, x= distancia
-            #self.Campo, self.DiferencialDeCampo, self.DiferencialDeCarga, self.r, self.x, self.a, self.Carga
-            self.r=-1
-            #deduccion
-            #derivada del campo dE
-            self.Carga= symbols('self.Carga')
-            self.diferencialDeCarga= symbols('dq') #diferencial de carga
-            self.constanteK, self.r = symbols('constanteK r', positive=True, real=True)
-            self.Campo= self.constanteK * (self.Carga/pow(self.r,2))
-            self.DiferencialDeCampo= diff(self.Campo, self.Carga)* self.diferencialDeCarga
-           
-           
-            #self.r= sqrt(pow(self.radio,2)+pow(self.x,2))
+                #debido a la geometria se puede decir que dE=2dEx, además que --> Cos= adyacente/hipotenusa = x/r
+                self.DiferencialDeCampo = 2 * self.DiferencialDeCampo * (self.x/ self.r) 
+                print("expresion ",self.DiferencialDeCampo )
+
+                #reemplazar r por sqrt(a**2+x**2)
+                self.r_expresion= sqrt(pow(self.radio,2)+pow(self.x,2))
+                self.DiferencialDeCampo = self.DiferencialDeCampo.subs(self.r,self.r_expresion )
+                print("expresion 2: ",self.DiferencialDeCampo )
+                
+                #integrar la expresion
+                self.q=symbols('q')
+                self.expresion_integrar = self.DiferencialDeCampo.subs(self.diferencialDeCarga,1) # 1 por la diferencial 
+                self.integral = integrate(self.expresion_integrar, (self.diferencialDeCarga, 0, (self.q/2) ))
+
+                print("integral: ", self.integral )
+
             
+
             
-            messagebox.showinfo("dE:",self.DiferencialDeCampo)
 
-        else:
-            pass    
+            else:
+                messagebox.showerror("error", "ingrese un número valido") 
 
-        #except Exception as msg: 
-        #    messagebox.showerror("error", "ingrese un número valido")
+        except Exception as msg: 
+            messagebox.showerror("error", "ingrese un número valido")
 
     def Disco(self):
         pass
