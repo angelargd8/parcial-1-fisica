@@ -90,7 +90,7 @@ class app(Tk):
 
                 #reemplazar las variables y calcular el valor
                 self.resultadoAnillo= self.integral.subs({self.radio: float (self.e1.get()), self.q: float(self.e3.get()), self.x : float(self.e2.get()), self.constanteK: 9*10**9 })
-                print("resultado: ", self.resultadoAnillo )
+                print("resultado: ", self.resultadoAnillo ,"\n")
                 self.l7.config(text=self.resultadoAnillo)
 
             
@@ -102,7 +102,72 @@ class app(Tk):
             messagebox.showerror("error", "asegurese de ingresar un número validoy todos los valores")
 
     def Disco(self):
-        pass
+        #calcular el campo electrico en el punto P del eje x
+        #deducir la ecuacion de E
+        #ecuaciones utiles: 
+        """
+        Campo electrico de un anillo 
+        E = K*q*x/(a**2 + x**2)**(3/2) 
+        dE = K*dq*x/(a**2 + x**2)**(3/2)
+        Cos= adyacente/hipotenusa = x/r
+        r= sqrt(a^2+x^2)
+        dq = σdA
+        """
+        try: 
+            self.radio = float (self.e1.get())
+            self.x = float(self.e2.get()) #distancia
+            self.Carga = float(self.e3.get())
+            if self.radio>0 and self.x>0:
+                #variables a usar
+                self.constanteK= 9*10**9
+                #campo = E, dE= DiferencialDeCampo, dq= DiferencialDeCarga, a= radio, r= distancia de diferencial de carga al punto, x= distancia
+                #self.Campo, self.DiferencialDeCampo, self.DiferencialDeCarga, self.r, self.x, self.a, self.Carga
+                self.r= sqrt(self.radio ** 2 + self.x ** 2)
+                #deduccion
+                #derivada del campo dE
+                #para que use variables, no los numeros
+                self.Carga= symbols('Carga')
+                self.diferencialDeCarga= symbols('dq') #diferencial de carga
+                self.sigma = symbols("σ") # sigma 
+                self.diferencialDeRadio = symbols("dr") # diferencial de radio
+                self.constanteK, self.r , self.x, self.radio = symbols('K r x a', positive=True, real=True) 
+                
+                #calculo de dE
+                self.Campo= self.constanteK * ((self.Carga*self.x)/(pow(pow(self.r,2)+pow(self.x,2),(3/2))))
+                self.DiferencialDeCampo= diff(self.Campo, self.Carga)* self.diferencialDeCarga #dE= K/r^2 *dq
+                print("dE:",self.DiferencialDeCampo)
+
+
+                #reemplazar dq por (σ*2*pi*r dr)
+                self.r_expresion= self.sigma * 2 * pi* self.r * self.diferencialDeRadio
+                self.DiferencialDeCampo = self.DiferencialDeCampo.subs(self.diferencialDeCarga,self.r_expresion )
+                print("expresion 2: ",self.DiferencialDeCampo )
+                
+                #integrar la expresion
+                self.q=symbols('q')
+                self.expresion_integrar = self.DiferencialDeCampo.subs(self.diferencialDeRadio,1) # 1 por la diferencial 
+                self.integral = integrate(self.expresion_integrar, (self.diferencialDeRadio, 0, (self.radio) ))
+
+                print("integral: ", self.integral )
+                self.l5.config(text=self.integral)
+
+                #reemplazar las variables y calcular el valor
+                self.resultadoAnillo= self.integral.subs({self.radio: float (self.e1.get()), self.q: float(self.e3.get()), self.x : float(self.e2.get()), self.constanteK: 9*10**9 })
+                print("resultado: ", self.resultadoAnillo )
+                self.l7.config(text=self.resultadoAnillo)
+
+            
+
+            else:
+                messagebox.showerror("error", "asegurese de ingresar un número validoy todos los valores") 
+
+        except Exception as msg: 
+            messagebox.showerror("error", "asegurese de ingresar un número validoy todos los valores")
+
+
+
+        
+   
 
     def LineaDeCarga(self):
         pass
