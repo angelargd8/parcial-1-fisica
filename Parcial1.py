@@ -118,11 +118,14 @@ class app(Tk):
             self.x = float(self.e2.get()) #distancia
             self.Carga = float(self.e3.get())
             if self.radio>0 and self.x>0:
+                
                 #variables a usar
                 self.constanteK= 9*10**9
                 #campo = E, dE= DiferencialDeCampo, dq= DiferencialDeCarga, a= radio, r= distancia de diferencial de carga al punto, x= distancia
                 #self.Campo, self.DiferencialDeCampo, self.DiferencialDeCarga, self.r, self.x, self.a, self.Carga
-                self.r= sqrt(self.radio ** 2 + self.x ** 2)
+                
+                self.R= sqrt(self.radio ** 2 + self.x ** 2)
+                self.r = symbols("r")
                 #deduccion
                 #derivada del campo dE
                 #para que use variables, no los numeros
@@ -141,12 +144,12 @@ class app(Tk):
                 #reemplazar dq por (σ*2*pi*r dr)
                 self.r_expresion= self.sigma * 2 * pi* self.r * self.diferencialDeRadio
                 self.DiferencialDeCampo = self.DiferencialDeCampo.subs(self.diferencialDeCarga,self.r_expresion )
-                print("expresion 2: ",self.DiferencialDeCampo )
+                print("expresion: ",self.DiferencialDeCampo )
                 
                 #integrar la expresion
-                self.q=symbols('q')
-                self.expresion_integrar = self.DiferencialDeCampo.subs(self.diferencialDeRadio,1) # 1 por la diferencial 
-                self.integral = integrate(self.expresion_integrar, (self.diferencialDeRadio, 0, (self.radio) ))
+                
+                #self.expresion_integrar = self.DiferencialDeCampo.subs(self.diferencialDeRadio,1) # 1 por la diferencial 
+                self.integral = integrate(self.DiferencialDeCampo, (self.diferencialDeRadio, 0, (self.R) ))
 
                 print("integral: ", self.integral )
                 self.l5.config(text=self.integral)
