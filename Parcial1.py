@@ -24,11 +24,18 @@ class app(Tk):
 
         self.l2=Label(text="Largo:");self.l2.place(x=10,y=50); self.l2.config(bg="#ffb3c6")
         self.e2=Entry(self);self.e2.place(x=85,y=50)
+
+        self.l3=Label(text="Carga:");self.l3.place(x=10,y=90); self.l3.config(bg="#ff8fab")
+        self.e3=Entry(self);self.e3.place(x=85,y=90)
         
         btn1= Button(self, text="Anillo", width=15,command=self.Anillo, bg="#ffc2d1");btn1.place(x=350,y=10)
         btn2=Button(self, text="Disco", width=15, command=self.Disco, bg="#ffb3c6");btn2.place(x=350,y=50)
         btn3=Button(self, text="Linea de carga", width=15, command=self.LineaDeCarga,bg="#ff8fab");btn3.place(x=350,y=90)
 
+        self.l4=Label(text="integral anillo:");self.l4.place(x=10,y=130); self.l4.config(bg="#ffc2d1")
+        self.l5=Label(text="");self.l5.place(x=10,y=170); self.l5.config(bg="#ff8fab")
+        self.l6=Label(text="resultado anillo:");self.l6.place(x=10,y=210); self.l6.config(bg="#ffc2d1")
+        self.l7=Label(text="");self.l7.place(x=10,y=250); self.l7.config(bg="#ff8fab")
 
 
     def Anillo(self):
@@ -44,20 +51,20 @@ class app(Tk):
    
         try: 
             self.radio = float (self.e1.get())
-            #self.x = float(self.e2.get()) #distancia
-            if self.radio>0:
+            self.x = float(self.e2.get()) #distancia
+            self.Carga = float(self.e3.get())
+            if self.radio>0 and self.x>0:
                 #variables a usar
                 self.constanteK= 9*10**9
                 #campo = E, dE= DiferencialDeCampo, dq= DiferencialDeCarga, a= radio, r= distancia de diferencial de carga al punto, x= distancia
                 #self.Campo, self.DiferencialDeCampo, self.DiferencialDeCarga, self.r, self.x, self.a, self.Carga
-                self.x=-1
                 self.r= sqrt(self.radio ** 2 + self.x ** 2)
                 #deduccion
                 #derivada del campo dE
                 #para que use variables, no los numeros
                 self.Carga= symbols('Carga')
                 self.diferencialDeCarga= symbols('dq') #diferencial de carga
-                self.constanteK, self.r , self.x, self.radio = symbols('constanteK r x a', positive=True, real=True) 
+                self.constanteK, self.r , self.x, self.radio = symbols('K r x a', positive=True, real=True) 
                 
                 #calculo de dE
                 self.Campo= self.constanteK * (self.Carga/pow(self.r,2))
@@ -79,16 +86,20 @@ class app(Tk):
                 self.integral = integrate(self.expresion_integrar, (self.diferencialDeCarga, 0, (self.q/2) ))
 
                 print("integral: ", self.integral )
+                self.l5.config(text=self.integral)
 
-            
+                #reemplazar las variables y calcular el valor
+                self.resultadoAnillo= self.integral.subs({self.radio: float (self.e1.get()), self.q: float(self.e3.get()), self.x : float(self.e2.get()), self.constanteK: 9*10**9 })
+                print("resultado: ", self.resultadoAnillo )
+                self.l7.config(text=self.resultadoAnillo)
 
             
 
             else:
-                messagebox.showerror("error", "ingrese un número valido") 
+                messagebox.showerror("error", "asegurese de ingresar un número validoy todos los valores") 
 
         except Exception as msg: 
-            messagebox.showerror("error", "ingrese un número valido")
+            messagebox.showerror("error", "asegurese de ingresar un número validoy todos los valores")
 
     def Disco(self):
         pass
