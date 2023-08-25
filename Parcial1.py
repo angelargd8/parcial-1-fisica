@@ -22,7 +22,7 @@ class app(Tk):
         self.l1=Label(text="Radio:");self.l1.place(x=10,y=10); self.l1.config(bg="#ffc2d1")
         self.e1=Entry(self);self.e1.place(x=85,y=10)
 
-        self.l2=Label(text="Largo:");self.l2.place(x=10,y=50); self.l2.config(bg="#ffb3c6")
+        self.l2=Label(text="Distancia x:");self.l2.place(x=10,y=50); self.l2.config(bg="#ffb3c6")
         self.e2=Entry(self);self.e2.place(x=85,y=50)
 
         self.l3=Label(text="Carga:");self.l3.place(x=10,y=90); self.l3.config(bg="#ff8fab")
@@ -125,8 +125,8 @@ class app(Tk):
                 #campo = E, dE= DiferencialDeCampo, dq= DiferencialDeCarga, a= radio, r= distancia de diferencial de carga al punto, x= distancia
                 #self.Campo, self.DiferencialDeCampo, self.DiferencialDeCarga, self.r, self.x, self.a, self.Carga
                 
-                self.R= sqrt(self.radio ** 2 + self.x ** 2)
-                self.r = symbols("r")
+                #self.R= sqrt(self.radio ** 2 + self.x ** 2)
+                #self.r = symbols("r")
                 #deduccion
                 #derivada del campo dE
                 #para que use variables, no los numeros
@@ -134,10 +134,10 @@ class app(Tk):
                 self.diferencialDeCarga= symbols('dq') #diferencial de carga
                 self.sigma = symbols("σ") # sigma 
                 self.diferencialDeRadio = symbols("dr") # diferencial de radio
-                self.constanteK, self.r , self.x, self.radio = symbols('K r x a', positive=True, real=True) 
+                self.constanteK, self.r , self.x, self.a = symbols('K r x a', positive=True, real=True) 
                 
                 #calculo de dE
-                self.Campo= self.constanteK * ((self.Carga*self.x)/(pow(pow(self.r,2)+pow(self.x,2),(3/2))))
+                self.Campo= self.constanteK * ((self.Carga*self.x)/(pow((pow(self.r,2))+(pow(self.x,2)),(3/2))))
                 self.DiferencialDeCampo= diff(self.Campo, self.Carga)* self.diferencialDeCarga #dE= K/r^2 *dq
                 print("dE:",self.DiferencialDeCampo)
 
@@ -149,16 +149,16 @@ class app(Tk):
                 #integrar la expresion
                 self.expresion_integrar = self.DiferencialDeCampo.subs(self.diferencialDeRadio, 1) # para integrar en sympy no se necesita del diferencial, solo se utiliza para la notación 
                 self.integral = integrate(self.expresion_integrar, self.r)
-                self.integralValuada = integrate(self.expresion_integrar, (self.r, 0, self.R))
+                self.integralValuada = integrate(self.expresion_integrar, (self.r, 0, self.radio))
                 print("integral: ", self.integral )
                 print("integral: ", self.integralValuada )
                 self.l4.config(text="Integral de Disco")
                 self.l5.config(text=self.integral)
 
                 #reemplazar las variables y calcular el valor
-                self.valorSigma =  float(self.e3.get())/(pi*float(self.e1.get())**2)
+                self.valorSigma =  float(self.e3.get())/(pi*(self.radio)**2)
                 self.resultadoDisco= self.integral.subs({ self.x : float(self.e2.get()), self.constanteK: 9*10**9, self.sigma: self.valorSigma, self.r: self.e1.get()})
-                print("resultado: ", self.resultadoDisco )
+                print("resultado: ", self.resultadoDisco,"\n" )
                 #self.l7.config(text=self.resultadoAnillo)
 
             
@@ -170,7 +170,50 @@ class app(Tk):
 
 
     def LineaDeCarga(self):
-        pass
+            #calcular el campo electrico en el punto P del eje x
+            #deducir la ecuacion de E
+            #ecuaciones utiles: 
+            """
+            E = K * q/r^2
+            dE = K * dq/r^2
+            Cos= adyacente/hipotenusa = x/r
+            r= sqrt(a^2+x^2)
+            dq = λ*dy
+            λ = q/2a
+            """
+   
+        
+            self.a = float (self.e1.get())
+            self.x = float(self.e2.get()) #distancia
+            self.Carga = float(self.e3.get())
+            if self.a>0 and self.x>0:
+                #variables a usar
+                self.constanteK= 9*10**9
+                #campo = E, dE= DiferencialDeCampo, dq= DiferencialDeCarga, a= radio, r= distancia de diferencial de carga al punto, x= distancia
+                #self.Campo, self.DiferencialDeCampo, self.DiferencialDeCarga, self.r, self.x, self.a, self.Carga
+                #self.r= sqrt(self.a ** 2 + self.x ** 2)
+                #deduccion
+                #derivada del campo dE
+                #para que use variables, no los numeros
+                self.Carga= symbols('Carga')
+                self.diferencialDeCarga= symbols('dq') #diferencial de carga
+                self.diferencialDeY= symbols('dy') #diferencial de carga
+                self.constanteK, self.r , self.x, self.radio, self.y, self.lamda = symbols('K r x a y λ', positive=True, real=True) 
+                
+                #calculo de dE
+                self.Campo= self.constanteK * (self.Carga/pow(self.r,2))
+                self.DiferencialDeCampo= diff(self.Campo, self.Carga)* self.diferencialDeCarga #dE= K/r^2 *dq
+                print("dE:",self.DiferencialDeCampo)
+
+                #sustituir r por su valor correspondiente
+                self.DiferencialDeCampo = self.DiferencialDeCampo.subs({self.r: (self.x**2 + self.y**2)**(1/2), self.diferencialDeCarga: self.lamda*self.diferencialDeY})
+                print("dE  =", self.DiferencialDeCampo)
+
+
+
+
+
+            
 
     
 
