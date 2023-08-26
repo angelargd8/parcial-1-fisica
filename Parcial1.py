@@ -14,7 +14,7 @@ class app(Tk):
     def __init__(self):
         Tk.__init__(self)
         self._root = Frame() #crea el frame principal
-        self.geometry("1000x900")
+        self.geometry("1100x1100")
         self.title("🤑 Parcial 1 🤑")
         self.config(bg="#ffafcc")
 
@@ -49,7 +49,7 @@ class app(Tk):
 
         #canvas
         self.c1 = Canvas(self, width=800, height=500, bg="white")
-        self.c1.place(x=190, y=150)
+        self.c1.place(x=250, y=150)
         self.c1.config(bg="misty rose")
 
 
@@ -69,7 +69,7 @@ class app(Tk):
             self.radio = float (self.e1.get())
             self.x = float(self.e2.get()) #distancia
             self.Carga = float(self.e3.get())
-            if self.radio>0 and self.x>0:
+            if self.radio>0 and self.x>0 and self.x>=self.radio:
                 self.limpiar()
                 self.grafica()
                 self.graficarAnillo()
@@ -136,7 +136,9 @@ class app(Tk):
         self.radio = float (self.e1.get())
         self.x = float(self.e2.get()) #distancia
         self.Carga = float(self.e3.get())
-        if self.radio>0 and self.x>0:
+        if self.radio>0 and self.x>0 and self.x>=self.radio:
+                self.limpiar()
+                self.grafica()
                 self.graficarDisco()
                 #variables a usar
                 self.constanteK= 9*10**9
@@ -174,15 +176,15 @@ class app(Tk):
                 self.integralValuada = integrate(self.expresion_integrar, (self.r, 0, self.radio))
                 print("integral: ", self.integral )
                 print("integral: ", self.integralValuada )
-                self.l4.config(text="Integral de Disco")
-                self.l5.config(text=self.integral)
+        
+                self.l9.config(text=self.integralValuada)
 
                 #reemplazar las variables y calcular el valor
                 self.valorSigma =  float(self.e3.get())/(pi*(self.radio)**2)
                 print(self.valorSigma)
                 self.resultadoDisco= self.integralValuada.subs({ self.x : float(self.e2.get()), self.constanteK: 9*10**9, self.sigma: self.valorSigma, self.r: self.radio})
                 print("resultado: ", self.resultadoDisco,"\n" )
-                #self.l7.config(text=self.resultadoAnillo)
+                self.l11.config(text=self.resultadoAnillo)
 
 
             
