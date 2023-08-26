@@ -136,9 +136,7 @@ class app(Tk):
         self.radio = float (self.e1.get())
         self.x = float(self.e2.get()) #distancia
         self.Carga = float(self.e3.get())
-        if True:#self.radio>0 and self.x>0:
-                self.limpiar()
-                self.grafica()
+        if self.radio>0 and self.x>0:
                 self.graficarDisco()
                 #variables a usar
                 self.constanteK= 9*10**9
@@ -150,7 +148,7 @@ class app(Tk):
                 #deduccion
                 #derivada del campo dE
                 #para que use variables, no los numeros
-                self.Carga= symbols('Carga')
+                self.Carga= symbols('Q')
                 self.diferencialDeCarga= symbols('dq') #diferencial de carga
                 self.sigma = symbols("σ") # sigma 
                 self.diferencialDeRadio = symbols("dr") # diferencial de radio
@@ -165,23 +163,27 @@ class app(Tk):
                 self.r_expresion= self.sigma * 2 * pi* self.r * self.diferencialDeRadio
                 self.DiferencialDeCampo = self.DiferencialDeCampo.subs(self.diferencialDeCarga,self.r_expresion )
                 print("expresion: ",self.DiferencialDeCampo )
-                
+
+               
                 #integrar la expresion
                 self.expresion_integrar = self.DiferencialDeCampo.subs(self.diferencialDeRadio, 1) # para integrar en sympy no se necesita del diferencial, solo se utiliza para la notación 
+                #antes de integrar sustituir x
+                #self.expresion_integrar = self.DiferencialDeCampo.subs(self.x, self.e2.get())
+                #print("expresssion: ", self.expresion_integrar ) 
                 self.integral = integrate(self.expresion_integrar, self.r)
                 self.integralValuada = integrate(self.expresion_integrar, (self.r, 0, self.radio))
                 print("integral: ", self.integral )
-                self.l9.config(text=self.integral)
-
                 print("integral: ", self.integralValuada )
-                
-
+                self.l4.config(text="Integral de Disco")
+                self.l5.config(text=self.integral)
 
                 #reemplazar las variables y calcular el valor
                 self.valorSigma =  float(self.e3.get())/(pi*(self.radio)**2)
-                self.resultadoDisco= self.integral.subs({ self.x : float(self.e2.get()), self.constanteK: 9*10**9, self.sigma: self.valorSigma, self.r: self.e1.get()})
+                print(self.valorSigma)
+                self.resultadoDisco= self.integralValuada.subs({ self.x : float(self.e2.get()), self.constanteK: 9*10**9, self.sigma: self.valorSigma, self.r: self.radio})
                 print("resultado: ", self.resultadoDisco,"\n" )
-                self.l11.config(text=self.resultadoDisco)
+                #self.l7.config(text=self.resultadoAnillo)
+
 
             
 
@@ -203,8 +205,6 @@ class app(Tk):
             dq = λ*dy
             λ = q/2a
             """
-   
-        
             self.a = float (self.e1.get())
             self.x = float(self.e2.get()) #distancia
             self.Carga = float(self.e3.get())
@@ -224,16 +224,44 @@ class app(Tk):
                 self.Carga= symbols('Carga')
                 self.diferencialDeCarga= symbols('dq') #diferencial de carga
                 self.diferencialDeY= symbols('dy') #diferencial de carga
-                self.constanteK, self.r , self.x, self.radio, self.y, self.lamda = symbols('K r x a y λ', positive=True, real=True) 
+                self.constanteK, self.r , self.x, self.y, self.lamda = symbols('K r x y λ', positive=True, real=True) 
                 
                 #calculo de dE
                 self.Campo= self.constanteK * (self.Carga/pow(self.r,2))
                 self.DiferencialDeCampo= diff(self.Campo, self.Carga)* self.diferencialDeCarga #dE= K/r^2 *dq
-                print("dE:",self.DiferencialDeCampo)
+                print("dE: ",self.DiferencialDeCampo)
 
                 #sustituir r por su valor correspondiente
                 self.DiferencialDeCampo = self.DiferencialDeCampo.subs({self.r: (self.x**2 + self.y**2)**(1/2), self.diferencialDeCarga: self.lamda*self.diferencialDeY})
-                print("dE  =", self.DiferencialDeCampo)
+                print("dE: ", self.DiferencialDeCampo)
+
+                #Se sabe que dEx = dEcosα = dE(x/r)
+                #Se sabe que dEy = -dEsenα = dE(y/r)
+
+                #multiplicando para obtener dEx
+                self.DiferencialDeCampo = self.DiferencialDeCampo*((self.x)/(self.x**2 + self.y**2)**(1/2)) 
+                print("dE: ", self.DiferencialDeCampo)
+
+                #integrando 
+                self.expresion_integrar = self.DiferencialDeCampo.subs(self.diferencialDeY, 1)
+                print("A integrar: ", self.expresion_integrar)
+                self.integral =  integrate(self.expresion_integrar, self.y)
+                self.integralValuada =  integrate(self.expresion_integrar, (self.y, -self.a, self.a ))
+                print("Integral: ", self.integral)
+                print("IntegralValuada: ", self.integralValuada)
+
+            #self.a = float (self.e1.get())
+            #self.x = float(self.e2.get()) #distancia
+            #self.Carga = float(self.e3.get())
+                #sustituir 
+                self.integralF = self.integralValuada.subs({ self.constanteK: 9*10**9, self.lamda: float(self.e3.get())/(2*self.a), self.x :float(self.e2.get()) })
+                print("Resultado: ", self.integralF)
+                 
+                
+
+
+
+
 
     def grafica(self):
         def f(x):
