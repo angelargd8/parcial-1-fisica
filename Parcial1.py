@@ -19,14 +19,14 @@ class app(Tk):
         self.config(bg="#ffafcc")
 
         #objetos
-        self.l1=Label(text="Radio:");self.l1.place(x=10,y=10); self.l1.config(bg="#ffc2d1")
-        self.e1=Entry(self);self.e1.place(x=85,y=10)
+        self.l1=Label(text="Radio (m):");self.l1.place(x=10,y=10); self.l1.config(bg="#ffc2d1")
+        self.e1=Entry(self);self.e1.place(x=90,y=10)
 
-        self.l2=Label(text="Distancia x:");self.l2.place(x=10,y=50); self.l2.config(bg="#ffddd2")
-        self.e2=Entry(self);self.e2.place(x=85,y=50)
+        self.l2=Label(text="Distancia (m):");self.l2.place(x=10,y=50); self.l2.config(bg="#ffddd2")
+        self.e2=Entry(self);self.e2.place(x=90,y=50)
 
-        self.l3=Label(text="Carga:");self.l3.place(x=10,y=90); self.l3.config(bg="#ff8fab")
-        self.e3=Entry(self);self.e3.place(x=85,y=90)
+        self.l3=Label(text="Carga (q):");self.l3.place(x=10,y=90); self.l3.config(bg="#ff8fab")
+        self.e3=Entry(self);self.e3.place(x=90,y=90)
         
         btn1= Button(self, text="Anillo", width=15,command=self.Anillo, bg="#ffc2d1");btn1.place(x=350,y=10)
         btn2=Button(self, text="Disco", width=15, command=self.Disco, bg="#ffddd2");btn2.place(x=350,y=50)
@@ -49,7 +49,7 @@ class app(Tk):
 
         #canvas
         self.c1 = Canvas(self, width=800, height=500, bg="white")
-        self.c1.place(x=250, y=150)
+        self.c1.place(x=270, y=150)
         self.c1.config(bg="misty rose")
 
 
@@ -184,7 +184,7 @@ class app(Tk):
                 print(self.valorSigma)
                 self.resultadoDisco= self.integralValuada.subs({ self.x : float(self.e2.get()), self.constanteK: 9*10**9, self.sigma: self.valorSigma, self.r: self.radio})
                 print("resultado: ", self.resultadoDisco,"\n" )
-                self.l11.config(text=self.resultadoAnillo)
+                self.l11.config(text=self.resultadoDisco)
 
 
             
@@ -251,6 +251,7 @@ class app(Tk):
                 self.integralValuada =  integrate(self.expresion_integrar, (self.y, -self.a, self.a ))
                 print("Integral: ", self.integral)
                 print("IntegralValuada: ", self.integralValuada)
+                self.l13.config(text=self.integralValuada)
 
             #self.a = float (self.e1.get())
             #self.x = float(self.e2.get()) #distancia
@@ -258,6 +259,7 @@ class app(Tk):
                 #sustituir 
                 self.integralF = self.integralValuada.subs({ self.constanteK: 9*10**9, self.lamda: float(self.e3.get())/(2*self.a), self.x :float(self.e2.get()) })
                 print("Resultado: ", self.integralF)
+                self.l15.config(text=self.integralF)
                  
                 
 
