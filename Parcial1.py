@@ -8,6 +8,7 @@
 from tkinter import * 
 from tkinter import messagebox
 from math import sin, cos, tan 
+from math import pi 
 from sympy import *  #libreria para las derivadas e integrales
 
 class app(Tk):
@@ -253,11 +254,8 @@ class app(Tk):
                 print("IntegralValuada: ", self.integralValuada)
                 self.l13.config(text=self.integralValuada)
 
-            #self.a = float (self.e1.get())
-            #self.x = float(self.e2.get()) #distancia
-            #self.Carga = float(self.e3.get())
                 #sustituir 
-                self.integralF = self.integralValuada.subs({ self.constanteK: 9*10**9, self.lamda: float(self.e3.get())/(2*self.a), self.x :float(self.e2.get()) })
+                self.integralF = self.integralValuada.subs({ self.constanteK: 9*10**9, self.lamda: float(self.e3.get())/(2*self.a), self.x :float(self.e2.get()), sqrt(pi): 3.14**(1/2) })
                 print("Resultado: ", self.integralF)
                 self.l15.config(text=self.integralF)
                  
