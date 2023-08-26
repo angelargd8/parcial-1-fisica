@@ -3,7 +3,14 @@
 # autores:  Francis Aguilar #222432
 #           Angela García   #22869
 # recursos: python 3.10
+# fecha de entrega: 15/08/2023
 # sin modificaciones
+"""
+ANTES DE CORRER EL PROGRAMA: 
+asegurese de tener instalada la libreria de: sympy
+
+"""
+
 # librerias:
 from tkinter import * 
 from tkinter import messagebox
