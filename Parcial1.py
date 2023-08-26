@@ -15,23 +15,23 @@ class app(Tk):
     def __init__(self):
         Tk.__init__(self)
         self._root = Frame() #crea el frame principal
-        self.geometry("1100x1100")
+        self.geometry("1400x1400")
         self.title("🤑 Parcial 1 🤑")
         self.config(bg="#ffafcc")
 
         #objetos
         self.l1=Label(text="Radio (m):");self.l1.place(x=10,y=10); self.l1.config(bg="#ffc2d1")
-        self.e1=Entry(self);self.e1.place(x=90,y=10)
+        self.e1=Entry(self);self.e1.place(x=110,y=10)
 
         self.l2=Label(text="Distancia (m):");self.l2.place(x=10,y=50); self.l2.config(bg="#ffddd2")
-        self.e2=Entry(self);self.e2.place(x=90,y=50)
+        self.e2=Entry(self);self.e2.place(x=110,y=50)
 
         self.l3=Label(text="Carga (q):");self.l3.place(x=10,y=90); self.l3.config(bg="#ff8fab")
-        self.e3=Entry(self);self.e3.place(x=90,y=90)
+        self.e3=Entry(self);self.e3.place(x=110,y=90)
         
-        btn1= Button(self, text="Anillo", width=15,command=self.Anillo, bg="#ffc2d1");btn1.place(x=350,y=10)
-        btn2=Button(self, text="Disco", width=15, command=self.Disco, bg="#ffddd2");btn2.place(x=350,y=50)
-        btn3=Button(self, text="Linea de carga", width=15, command=self.LineaDeCarga,bg="#ff8fab");btn3.place(x=350,y=90)
+        btn1= Button(self, text="Anillo", width=15,command=self.Anillo, bg="#ffc2d1");btn1.place(x=330,y=10)
+        btn2=Button(self, text="Disco", width=15, command=self.Disco, bg="#ffddd2");btn2.place(x=330,y=50)
+        btn3=Button(self, text="Linea de carga", width=15, command=self.LineaDeCarga,bg="#ff8fab");btn3.place(x=330,y=90)
 
         self.l4=Label(text="integral anillo:");self.l4.place(x=10,y=130); self.l4.config(bg="#ffc2d1")
         self.l5=Label(text="");self.l5.place(x=10,y=170); self.l5.config(bg="#ff8fab")
@@ -50,7 +50,7 @@ class app(Tk):
 
         #canvas
         self.c1 = Canvas(self, width=800, height=500, bg="white")
-        self.c1.place(x=270, y=150)
+        self.c1.place(x=450, y=150)
         self.c1.config(bg="misty rose")
 
 
@@ -116,10 +116,10 @@ class app(Tk):
             
 
             else:
-                messagebox.showerror("error", "asegurese de ingresar un número validoy todos los valores") 
+                messagebox.showerror("error", "asegurese de ingresar un número valido y todos los valores (tome en cuenta que la distancia debe de ser mayor que el radio)") 
 
         except Exception as msg: 
-            messagebox.showerror("error", "asegurese de ingresar un número validoy todos los valores")
+            messagebox.showerror("error", "asegurese de ingresar un número valido y todos los valores (tome en cuenta que la distancia debe de ser mayor que el radio)")
 
     def Disco(self):
         #calcular el campo electrico en el punto P del eje x
@@ -191,7 +191,7 @@ class app(Tk):
             
 
         else:
-            messagebox.showerror("error", "asegurese de ingresar un número validoy todos los valores") 
+            messagebox.showerror("error", "asegurese de ingresar un número valido y todos los valores (tome en cuenta que la distancia debe de ser mayor que el radio)") 
 
        
 
@@ -258,11 +258,10 @@ class app(Tk):
                 self.integralF = self.integralValuada.subs({ self.constanteK: 9*10**9, self.lamda: float(self.e3.get())/(2*self.a), self.x :float(self.e2.get()), sqrt(pi): 3.14**(1/2) })
                 print("Resultado: ", self.integralF)
                 self.l15.config(text=self.integralF)
-                 
+            else:
+                messagebox.showerror("error", "asegurese de ingresar un número valido y todos los valores (tome en cuenta que la distancia debe de ser mayor que el radio)") 
+  
                 
-
-
-
 
 
     def grafica(self):
